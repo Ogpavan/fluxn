@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Fluxon - SaaS Hosting Platform
+
+A clean minimal SaaS hosting dashboard built with Next.js, shadcn/ui, TailwindCSS, and PWA capabilities.
+
+## Features
+
+- **Next.js App Router** - Modern React framework with server-side rendering
+- **shadcn/ui Components** - Beautiful, accessible UI components
+- **TailwindCSS** - Utility-first CSS framework for rapid styling
+- **PWA Support** - Progressive Web App with offline capabilities
+- **Responsive Design** - Mobile-first, works great on all devices
+- **Clean Dashboard** - Intuitive interface for managing hosting projects
+
+## Pages
+
+- `/` - Landing page with hero section and features
+- `/auth/login` - Login page (GitHub OAuth placeholder)
+- `/dashboard` - Main dashboard with project statistics
+- `/dashboard/projects` - Projects list with add new project dialog
+- `/dashboard/projects/[id]` - Individual project details and management
+- `/dashboard/settings` - Account and team settings
+
+## Components
+
+- **Navbar** - Top navigation with brand and user menu
+- **Sidebar** - Left navigation with dashboard links
+- **ProjectCard** - Reusable project display component
+- **AddProjectDialog** - Modal for creating new projects
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies:**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+   ```bash
+   npm install
+   ```
+
+2. **Run the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+3. **Open your browser:**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** JavaScript
+- **Styling:** TailwindCSS + shadcn/ui
+- **PWA:** next-pwa + manifest.json
+- **Icons:** Emojis (easily replaceable with icon libraries)
+
+## Project Structure
+
+```
+fluxon/
+├── app/
+│   ├── auth/login/page.js          # Login page
+│   ├── dashboard/
+│   │   ├── layout.js               # Dashboard layout
+│   │   ├── page.js                 # Dashboard home
+│   │   ├── projects/
+│   │   │   ├── page.js             # Projects list
+│   │   │   └── [id]/page.js        # Project details
+│   │   └── settings/page.js        # Settings page
+│   ├── globals.css                 # Global styles
+│   ├── layout.js                   # Root layout
+│   └── page.js                     # Landing page
+├── components/
+│   ├── navbar.jsx                  # Navigation component
+│   ├── sidebar.jsx                 # Sidebar component
+│   └── ui/                         # shadcn/ui components
+├── public/
+│   └── manifest.json               # PWA manifest
+└── lib/
+    └── utils.js                    # Utility functions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployment
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+This project is optimized for deployment on Vercel:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push your code to GitHub
+2. Import the project in Vercel
+3. Deploy with one click
 
-## Learn More
+## PWA Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Offline Support** - Works without internet connection
+- **App-like Experience** - Can be installed on mobile devices
+- **Fast Loading** - Optimized for performance
+- **Responsive** - Adapts to any screen size
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Customization
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Colors & Branding
 
-## Deploy on Vercel
+- Update the brand name in `components/navbar.jsx`
+- Modify colors in `tailwind.config.js`
+- Replace emoji icons with your preferred icon library
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Adding Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Authentication:** Integrate with NextAuth.js for GitHub OAuth
+- **Database:** Add Prisma or Supabase for data persistence
+- **Real-time Updates:** Implement with Socket.io or Pusher
+- **Analytics:** Integrate with Vercel Analytics or Google Analytics
+
+## License
+
+MIT License - feel free to use this project as a starting point for your own SaaS platform!
