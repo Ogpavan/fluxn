@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -75,7 +74,6 @@ export default function ProjectsPage() {
 
   const handleCreateProject = () => {
     // Placeholder for project creation logic
-    console.log("Creating project:", { projectName, projectDescription });
     setIsOpen(false);
     setProjectName("");
     setProjectDescription("");
@@ -98,27 +96,28 @@ export default function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="">Projects</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-base font-semibold">Projects</h1>
+          <p className="text-xs text-gray-600 mt-1">
             Manage and deploy your applications
           </p>
         </div>
-
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button>Add New Project</Button>
+            <Button size="sm">
+              <span className="material-icons">Add New Project</span>
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Add New Project</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-base">Add New Project</DialogTitle>
+              <DialogDescription className="text-xs">
                 Create a new project to deploy your application. Fill in the
                 details below.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
+            <div className="grid gap-3 py-2">
+              <div className="grid grid-cols-4 items-center gap-2">
+                <Label htmlFor="name" className="text-right text-xs">
                   Name
                 </Label>
                 <Input
@@ -126,11 +125,11 @@ export default function ProjectsPage() {
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
                   placeholder="My awesome project"
-                  className="col-span-3"
+                  className="col-span-3 text-xs"
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="description" className="text-right">
+              <div className="grid grid-cols-4 items-center gap-2">
+                <Label htmlFor="description" className="text-right text-xs">
                   Description
                 </Label>
                 <Textarea
@@ -138,12 +137,12 @@ export default function ProjectsPage() {
                   value={projectDescription}
                   onChange={(e) => setProjectDescription(e.target.value)}
                   placeholder="Brief description of your project"
-                  className="col-span-3"
+                  className="col-span-3 text-xs"
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" onClick={handleCreateProject}>
+              <Button type="submit" size="sm" onClick={handleCreateProject}>
                 Create Project
               </Button>
             </DialogFooter>
@@ -151,47 +150,55 @@ export default function ProjectsPage() {
         </Dialog>
       </div>
 
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <Card
-            key={project.id}
-            className="bg-white hover:shadow-lg transition-shadow"
-          >
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-lg font-semibold text-gray-900 truncate">
+      {/* Minimal Table */}
+      <div className="overflow-x-auto rounded border border-gray-200 bg-white">
+        <table className="min-w-full text-xs">
+          <thead>
+            <tr className="bg-gray-50">
+              <th className="px-3 py-2 text-left font-medium text-gray-700">
+                Name
+              </th>
+              <th className="px-3 py-2 text-left font-medium text-gray-700">
+                Description
+              </th>
+              <th className="px-3 py-2 text-left font-medium text-gray-700">
+                Status
+              </th>
+              <th className="px-3 py-2 text-left font-medium text-gray-700">
+                Last Deployment
+              </th>
+              <th className="px-3 py-2 text-left font-medium text-gray-700">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {projects.map((project) => (
+              <tr
+                key={project.id}
+                className="border-t border-gray-100 hover:bg-gray-50"
+              >
+                <td className="px-3 py-2 font-semibold text-gray-900 truncate">
                   {project.name}
-                </CardTitle>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                    project.status
-                  )}`}
-                >
-                  {project.status}
-                </span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                {project.description}
-              </p>
-
-              <div className="space-y-3">
-                <div className="text-xs text-gray-500">
-                  Last deployment: {project.lastDeployment}
-                </div>
-
-                <div className="flex space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    asChild
-                    className="flex-1"
+                </td>
+                <td className="px-3 py-2 text-gray-600 truncate">
+                  {project.description}
+                </td>
+                <td className="px-3 py-2 flex ">
+                  <span
+                    className={`px-2 py-1 rounded-full  ${getStatusColor(
+                      project.status
+                    )}`}
                   >
-                    <Link href={`/dashboard/projects/${project.id}`}>
-                      View Details
-                    </Link>
+                    {project.status}
+                  </span>
+                </td>
+                <td className="px-3 py-2 text-gray-500">
+                  {project.lastDeployment}
+                </td>
+                <td className="px-3 py-2 flex gap-2">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/dashboard/projects/${project.id}`}>View</Link>
                   </Button>
                   {project.url && (
                     <Button variant="outline" size="sm" asChild>
@@ -204,34 +211,30 @@ export default function ProjectsPage() {
                       </a>
                     </Button>
                   )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Empty State */}
       {projects.length === 0 && (
-        <Card className="bg-white">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-              <span className="text-4xl">🚀</span>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              No projects yet
-            </h3>
-            <p className="text-gray-600 text-center mb-6 max-w-md">
-              Get started by creating your first project. Deploy your
-              applications with just a few clicks.
-            </p>
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-              <DialogTrigger asChild>
-                <Button>Create Your First Project</Button>
-              </DialogTrigger>
-            </Dialog>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col items-center justify-center py-12">
+          <span className="text-4xl mb-4">🚀</span>
+          <h3 className="text-base font-semibold text-gray-900 mb-2">
+            No projects yet
+          </h3>
+          <p className="text-xs text-gray-600 text-center mb-6 max-w-md">
+            Get started by creating your first project. Deploy your applications
+            with just a few clicks.
+          </p>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm">Create Your First Project</Button>
+            </DialogTrigger>
+          </Dialog>
+        </div>
       )}
     </div>
   );
