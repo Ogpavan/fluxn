@@ -18,6 +18,8 @@ export default function DashboardPage() {
   const [repos, setRepos] = useState([]);
   const [loadingRepos, setLoadingRepos] = useState(true);
   const [deployRepo, setDeployRepo] = useState(null);
+  const [deploying, setDeploying] = useState(false);
+  const [deployLog, setDeployLog] = useState("");
 
   // Fetch GitHub repos for the logged-in user
   useEffect(() => {
@@ -67,6 +69,32 @@ export default function DashboardPage() {
       color: "bg-purple-50 text-purple-600",
     },
   ];
+
+  // Real deployment process via API
+  const handleDeploy = async () => {
+    setDeploying(true);
+    setDeployLog("");
+    setDeployLog((log) => log + `> Deploying repository...\n`);
+    try {
+      const res = await fetch("/api/deploy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          repoUrl: deployRepo.clone_url,
+          repoName: deployRepo.name,
+          accessToken: session?.accessToken || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setDeployLog((log) => log + data.log + `\n> Success! Your repo is being served at ${data.url}\n`);
+      } else {
+        setDeployLog((log) => log + `> Error: ${data.error || "Unknown error"}\n`);
+      }
+    } catch (err) {
+      setDeployLog((log) => log + `> Error: ${err.toString()}\n`);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -202,12 +230,12 @@ export default function DashboardPage() {
       </Card>
 
       {/* Deploy Dialog */}
-      <Dialog open={!!deployRepo} onOpenChange={() => setDeployRepo(null)}>
+      <Dialog open={!!deployRepo} onOpenChange={() => { setDeployRepo(null); setDeploying(false); setDeployLog(""); }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Deploy Repository</DialogTitle>
           </DialogHeader>
-          {deployRepo && (
+          {deployRepo && !deploying && (
             <div className="space-y-2">
               <div>
                 <span className="font-semibold">Name:</span> {deployRepo.name}
@@ -225,7 +253,6 @@ export default function DashboardPage() {
                   hour: "2-digit",
                   minute: "2-digit",
                   second: "2-digit",
-
                   hour12: false,
                 })}
               </div>
@@ -242,17 +269,36 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
+          {deploying && (
+            <div className="bg-black text-green-400 font-mono text-xs rounded p-3 h-40 overflow-y-auto whitespace-pre">
+              {deployLog}
+            </div>
+          )}
           <DialogFooter>
-            <Button
-              size="sm"
-              className="w-full"
-              onClick={() => {
-                // TODO: Add your deploy logic here
-                setDeployRepo(null);
-              }}
-            >
-              <span>Confirm Deploy</span>
-            </Button>
+            {!deploying ? (
+              <Button
+                size="sm"
+                className="w-full"
+                onClick={async () => {
+                  await handleDeploy();
+                }}
+              >
+                <span>Confirm Deploy</span>
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                className="w-full"
+                variant="outline"
+                onClick={() => {
+                  setDeployRepo(null);
+                  setDeploying(false);
+                  setDeployLog("");
+                }}
+              >
+                <span>Close</span>
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
